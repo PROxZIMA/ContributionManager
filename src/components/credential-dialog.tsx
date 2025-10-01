@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -72,6 +72,7 @@ export function CredentialDialog({
   onSuccess,
 }: CredentialDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPat, setShowPat] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   
@@ -153,11 +154,35 @@ export function CredentialDialog({
                   <FormItem>
                     <FormLabel>{config.label}</FormLabel>
                     <FormControl>
-                      <Input
-                        type={config.type}
-                        placeholder={config.placeholder}
-                        {...field}
-                      />
+                      {key === 'pat' ? (
+                        <div className="relative">
+                          <Input
+                            type={showPat ? 'text' : 'password'}
+                            placeholder={config.placeholder}
+                            className="pr-10"
+                            {...field}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent hover:text-foreground"
+                            onClick={() => setShowPat(!showPat)}
+                          >
+                            {showPat ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Input
+                          type={config.type}
+                          placeholder={config.placeholder}
+                          {...field}
+                        />
+                      )}
                     </FormControl>
                     {key === 'pat' && isEditing && (
                         <FormDescription>Leave blank to keep current PAT.</FormDescription>
