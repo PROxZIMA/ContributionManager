@@ -33,3 +33,7 @@ export type AzureFormValues = z.infer<typeof AzureCredentialsSchema>;
 export type GitHubFormValues = z.infer<typeof GitHubCredentialsSchema>;
 export type EmailAuthValues = z.infer<typeof EmailAuthSchema>;
 export type EmailSignUpValues = z.infer<typeof EmailSignUpSchema>;
+
+// Types for credentials without PAT tokens (for Firestore storage)
+export type AzureCredentialsDataOnly = Omit<AzureFormValues, 'pat'>;
+export type GitHubCredentialsDataOnly = Omit<GitHubFormValues, 'pat'>;

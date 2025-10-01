@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
-import { getCredentials, TCredentials } from '@/lib/firebase/firestore';
+import { getCompleteCredentials, TCompleteCredentials } from '@/lib/firebase/firestore';
 import CredentialCard from './credential-card';
 import { Cloud, Github, Loader2 } from 'lucide-react';
 import type { AzureFormValues, GitHubFormValues } from '@/lib/schemas';
@@ -11,13 +11,13 @@ type ServiceName = 'azure' | 'github';
 
 export default function DashboardClient() {
   const { user } = useAuth();
-  const [credentials, setCredentials] = useState<TCredentials | null>(null);
+  const [credentials, setCredentials] = useState<TCompleteCredentials | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchCredentials = async () => {
     if (!user) return;
     setLoading(true);
-    const creds = await getCredentials(user.uid);
+    const creds = await getCompleteCredentials(user.uid);
     setCredentials(creds);
     setLoading(false);
   };
