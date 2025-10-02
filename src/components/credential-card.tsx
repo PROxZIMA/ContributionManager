@@ -26,12 +26,11 @@ import { CredentialDialog } from './credential-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth-context';
 import { deleteAzureCredentials, deleteGithubCredentials } from '@/lib/firebase/firestore';
-
-type ServiceKey = 'azure' | 'github';
+import { type ProviderKey } from '@/lib/providers';
 
 interface CredentialCardProps {
   serviceName: string;
-  serviceKey: ServiceKey;
+  serviceKey: ProviderKey;
   icon: React.ReactNode;
   description: string;
   data: any;
@@ -158,8 +157,7 @@ export default function CredentialCard({
       <CredentialDialog
         isOpen={isDialogOpen}
         setIsOpen={setIsDialogOpen}
-        serviceName={serviceName}
-        serviceKey={serviceKey}
+        providerKey={serviceKey}
         initialData={data}
         onSuccess={() => {
           setIsDialogOpen(false);

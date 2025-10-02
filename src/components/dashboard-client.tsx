@@ -4,15 +4,14 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { getCompleteCredentials, TCompleteCredentials } from '@/lib/firebase/firestore';
 import CredentialCard from './credential-card';
-import { Cloud, Github, Loader2 } from 'lucide-react';
-import type { AzureFormValues, GitHubFormValues } from '@/lib/schemas';
-
-type ServiceName = 'azure' | 'github';
+import { Loader2 } from 'lucide-react';
+import { getAllProviders, type ProviderData } from '@/lib/providers';
 
 export default function DashboardClient() {
   const { user } = useAuth();
-  const [credentials, setCredentials] = useState<TCompleteCredentials | null>(null);
+  const [credentials, setCredentials] = useState<ProviderData | null>(null);
   const [loading, setLoading] = useState(true);
+  const providers = getAllProviders();
 
   const fetchCredentials = async () => {
     if (!user) return;
@@ -38,30 +37,24 @@ export default function DashboardClient() {
     );
   }
 
-  const azureFields: (keyof AzureFormValues)[] = ['email', 'organization', 'pat'];
-  const githubFields: (keyof GitHubFormValues)[] = ['username', 'pat'];
-
   return (
     <>
       <div className="grid gap-6 md:grid-cols-2">
-        <CredentialCard
-          serviceName="Azure DevOps"
-          serviceKey="azure"
-          icon={<Cloud className="h-8 w-8 text-primary" />}
-          description="Manage your credentials for Azure DevOps API."
-          data={credentials?.azure}
-          fields={azureFields}
-          onUpdate={onCredentialUpdate}
-        />
-        <CredentialCard
-          serviceName="GitHub"
-          serviceKey="github"
-          icon={<Github className="h-8 w-8 text-primary" />}
-          description="Manage your credentials for GitHub API."
-          data={credentials?.github}
-          fields={githubFields}
-          onUpdate={onCredentialUpdate}
-        />
+        {providers.map((provider) => {
+          const IconComponent = provider.icon;
+          return (
+            <CredentialCard
+              key={provider.key}
+              serviceName={provider.name}
+              serviceKey={provider.key}
+              icon={<IconComponent className="h-8 w-8 text-primary" />}
+              description={provider.description}
+              data={credentials?.[provider.key]}
+              fields={provider.fieldsOrder as any}
+              onUpdate={onCredentialUpdate}
+            />
+          );
+        })}
       </div>
     </>
   );

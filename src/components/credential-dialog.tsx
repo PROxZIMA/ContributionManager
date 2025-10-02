@@ -24,50 +24,29 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  AzureCredentialsSchema,
-  GitHubCredentialsSchema,
-  type AzureFormValues,
-  type GitHubFormValues,
-} from '@/lib/schemas';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/hooks/use-toast';
-import { setAzureCredentials, setGithubCredentials } from '@/lib/firebase/firestore';
+import { 
+  getProvider, 
+  type ProviderKey, 
+  type ProviderCredentials 
+} from '@/lib/providers';
 import { z } from 'zod';
-
-type ServiceKey = 'azure' | 'github';
 
 interface CredentialDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  serviceName: string;
-  serviceKey: ServiceKey;
-  initialData?: AzureFormValues | GitHubFormValues;
+  providerKey: ProviderKey;
+  initialData?: ProviderCredentials;
   onSuccess: () => void;
 }
 
-const formSchemas = {
-  azure: AzureCredentialsSchema,
-  github: GitHubCredentialsSchema,
-};
-
-const formFieldsConfig = {
-    azure: {
-        email: { label: 'Email Address', type: 'email', placeholder: 'you@example.com' },
-        organization: { label: 'Organization', type: 'text', placeholder: 'Your Azure DevOps Org' },
-        pat: { label: 'Personal Access Token (PAT)', type: 'password', placeholder: 'Enter new PAT to update' },
-    },
-    github: {
-        username: { label: 'Username', type: 'text', placeholder: 'Your GitHub username' },
-        pat: { label: 'Personal Access Token (PAT)', type: 'password', placeholder: 'Enter new PAT to update' },
-    },
-};
+// All configuration now comes from the centralized providers config
 
 export function CredentialDialog({
   isOpen,
   setIsOpen,
-  serviceName,
-  serviceKey,
+  providerKey,
   initialData,
   onSuccess,
 }: CredentialDialogProps) {
@@ -76,20 +55,21 @@ export function CredentialDialog({
   const { user } = useAuth();
   const { toast } = useToast();
   
+  const provider = getProvider(providerKey);
   const isEditing = !!initialData;
-  const currentSchema = formSchemas[serviceKey];
+  const currentSchema = provider.schema;
   const updateSchema = currentSchema.partial().extend({
     pat: currentSchema.shape.pat.optional().or(z.literal('')),
   });
   
   const resolver = zodResolver(isEditing ? updateSchema : currentSchema);
 
-  const form = useForm<AzureFormValues | GitHubFormValues>({
+  const form = useForm({
     resolver,
     defaultValues: initialData || {},
   });
 
-  const onSubmit = async (values: AzureFormValues | GitHubFormValues) => {
+  const onSubmit = async (values: any) => {
     if (!user) {
       toast({
         title: 'Authentication Error',
@@ -109,14 +89,10 @@ export function CredentialDialog({
     }
 
     try {
-      if (serviceKey === 'azure') {
-        await setAzureCredentials(user.uid, finalValues as AzureFormValues);
-      } else {
-        await setGithubCredentials(user.uid, finalValues as GitHubFormValues);
-      }
+      await provider.saveCredentials(user.uid, finalValues);
       toast({
         title: 'Success!',
-        description: `Your ${serviceName} credentials have been saved.`,
+        description: `Your ${provider.name} credentials have been saved.`,
       });
       onSuccess();
       form.reset();
@@ -131,30 +107,30 @@ export function CredentialDialog({
       setIsSubmitting(false);
     }
   };
-  
-  const fieldsForService = formFieldsConfig[serviceKey];
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit' : 'Add'} {serviceName} Credentials</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit' : 'Add'} {provider.name} Credentials</DialogTitle>
           <DialogDescription>
             Enter your credentials below. Your sensitive information will be stored securely.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-            {Object.entries(fieldsForService).map(([key, config]) => (
+            {provider.fieldsOrder.map((fieldKey) => {
+              const config = provider.fields[fieldKey];
+              return (
               <FormField
-                key={key}
+                key={fieldKey}
                 control={form.control}
-                name={key as any}
+                name={fieldKey as any}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{config.label}</FormLabel>
                     <FormControl>
-                      {key === 'pat' ? (
+                      {fieldKey === 'pat' ? (
                         <div className="relative">
                           <Input
                             type={showPat ? 'text' : 'password'}
@@ -184,14 +160,15 @@ export function CredentialDialog({
                         />
                       )}
                     </FormControl>
-                    {key === 'pat' && isEditing && (
+                    {fieldKey === 'pat' && isEditing && (
                         <FormDescription>Leave blank to keep current PAT.</FormDescription>
                     )}
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            ))}
+              );
+            })}
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
