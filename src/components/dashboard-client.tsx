@@ -39,6 +39,33 @@ export default function DashboardClient() {
 
   return (
     <>
+      {/* User ID Section */}
+      {user && (
+        <div className="mb-6">
+          <div className="bg-muted/50 border rounded-lg p-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Your API User ID</h3>
+                <p className="text-sm text-muted-foreground">
+                  Use this Firebase User ID when making API calls to retrieve your contribution data.
+                </p>
+                <div className="flex items-center gap-2 mt-3">
+                  <code className="bg-background px-3 py-2 rounded border text-sm font-mono select-all">
+                    {user.uid}
+                  </code>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(user.uid)}
+                    className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded hover:bg-primary/90"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="grid gap-6 md:grid-cols-2">
         {providers.map((provider) => {
           const IconComponent = provider.icon;

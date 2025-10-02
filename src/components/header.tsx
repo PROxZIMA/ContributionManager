@@ -40,13 +40,24 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-card shadow-sm">
       <div className="container mx-auto flex h-16 items-center px-4">
         <Link
-          href="/dashboard"
-          className="text-xl font-bold text-primary tracking-tight"
+          href="/home"
+          className="flex items-center gap-3 text-xl font-bold text-primary tracking-tight hover:opacity-80 transition-opacity"
         >
-          Contribution Token Manager
+          <div className="relative w-8 h-8 flex-shrink-0">
+            <Image
+              src="/logo.png"
+              alt="CTM Logo"
+              fill
+              sizes="32px"
+              className="object-contain"
+              priority
+            />
+          </div>
+          <span className="hidden sm:inline">Contribution Token Manager</span>
+          <span className="sm:hidden">CTM</span>
         </Link>
         <div className="ml-auto flex items-center space-x-4">
-          {user && (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -77,6 +88,14 @@ export default function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Link href="/login">
+                <Button variant="outline" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </div>

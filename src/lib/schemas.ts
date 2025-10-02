@@ -37,3 +37,26 @@ export type EmailSignUpValues = z.infer<typeof EmailSignUpSchema>;
 // Types for credentials without PAT tokens (for Firestore storage)
 export type AzureCredentialsDataOnly = Omit<AzureFormValues, 'pat'>;
 export type GitHubCredentialsDataOnly = Omit<GitHubFormValues, 'pat'>;
+
+// API Response Types for Contributions API
+export interface ContributionsResponse {
+  total: Record<string, number>;
+  contributions: Contribution[];
+  breakdown?: Record<string, number> | null;
+  meta: MetaInfo;
+}
+
+export interface Contribution {
+  date: string;
+  count: number;
+  level: number;
+  activity?: Record<string, number> | null;
+}
+
+export interface MetaInfo {
+  scannedProjects: number;
+  scannedRepos: number;
+  elapsedMs: number;
+  cachedProjects: boolean;
+  errors: string[];
+}
