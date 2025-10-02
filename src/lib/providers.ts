@@ -5,7 +5,7 @@ import {
   type AzureFormValues,
   type GitHubFormValues 
 } from '@/lib/schemas';
-import { setAzureCredentials, setGithubCredentials } from '@/lib/firebase/firestore';
+import { setProviderCredentials } from '@/lib/firebase/firestore';
 
 // Provider configuration types
 export type ProviderKey = 'azure' | 'github';
@@ -24,7 +24,7 @@ export interface ProviderConfig {
   schema: any; // Zod schema
   fields: Record<string, FieldConfig>;
   fieldsOrder: string[];
-  saveCredentials: (userId: string, data: any) => Promise<void>;
+  saveCredentials: (userId: string, providerKey: ProviderKey, data: any) => Promise<void>;
 }
 
 // Centralized provider configurations
@@ -53,7 +53,7 @@ export const PROVIDERS: Record<ProviderKey, ProviderConfig> = {
       }
     },
     fieldsOrder: ['email', 'organization', 'pat'],
-    saveCredentials: setAzureCredentials
+    saveCredentials: setProviderCredentials
   },
   github: {
     key: 'github',
@@ -74,7 +74,7 @@ export const PROVIDERS: Record<ProviderKey, ProviderConfig> = {
       }
     },
     fieldsOrder: ['username', 'pat'],
-    saveCredentials: setGithubCredentials
+    saveCredentials: setProviderCredentials
   }
 };
 

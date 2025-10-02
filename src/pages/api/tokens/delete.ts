@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { deleteUserTokenServer } from '@/lib/server/secret-manager-server';
 import { getAuthToken, validateAuthToken, getUserIdFromRequest } from '@/lib/server/auth-utils';
+import { getProviderKeys, isValidProviderKey } from '@/lib/providers';
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,8 +31,11 @@ export default async function handler(
     }
 
     // Validate provider
-    if (!['azure', 'github'].includes(provider)) {
-      return res.status(400).json({ error: 'Invalid provider' });
+    if (!isValidProviderKey(provider)) {
+      return res.status(400).json({ 
+        error: 'Invalid provider', 
+        validProviders: getProviderKeys() 
+      });
     }
 
     await deleteUserTokenServer(userId, provider);

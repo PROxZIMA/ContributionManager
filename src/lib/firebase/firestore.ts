@@ -7,6 +7,14 @@ import {
   deleteUserToken, 
   getUserTokens 
 } from './secret-manager-client';
+import { 
+  getAllProviders, 
+  getProvider, 
+  isValidProviderKey,
+  type ProviderKey,
+  type ProviderData,
+  type ProviderCredentials
+} from '@/lib/providers';
 
 // Types for credentials without PAT tokens (stored in Firestore)
 export type AzureCredentialsData = Omit<AzureFormValues, 'pat'>;
@@ -18,10 +26,7 @@ type TCredentials = {
 };
 
 // Types for complete credentials including PAT tokens (for client use)
-export type TCompleteCredentials = {
-  azure?: AzureFormValues;
-  github?: GitHubFormValues;
-};
+export type TCompleteCredentials = ProviderData;
 
 const credentialsCollection = 'credentials';
 
@@ -55,21 +60,17 @@ export async function getCompleteCredentials(userId: string): Promise<TCompleteC
     const tokens = await getUserTokens(userId);
 
     const completeCredentials: TCompleteCredentials = {};
+    const providers = getAllProviders();
 
-    // Reconstruct Azure credentials with PAT token
-    if (credentials.azure) {
-      completeCredentials.azure = {
-        ...credentials.azure,
-        pat: tokens.azure || ''
-      };
-    }
-
-    // Reconstruct GitHub credentials with PAT token
-    if (credentials.github) {
-      completeCredentials.github = {
-        ...credentials.github,
-        pat: tokens.github || ''
-      };
+    // Reconstruct credentials with PAT tokens for each provider
+    for (const provider of providers) {
+      const providerKey = provider.key;
+      if (credentials[providerKey as keyof typeof credentials]) {
+        (completeCredentials as any)[providerKey] = {
+          ...credentials[providerKey as keyof typeof credentials],
+          pat: tokens[providerKey as keyof typeof tokens] || ''
+        };
+      }
     }
 
     return completeCredentials;
@@ -79,88 +80,55 @@ export async function getCompleteCredentials(userId: string): Promise<TCompleteC
   }
 }
 
-export async function setAzureCredentials(
+/**
+ * Generic function to set provider credentials
+ */
+export async function setProviderCredentials(
   userId: string,
-  data: AzureFormValues
+  providerKey: ProviderKey,
+  data: ProviderCredentials
 ) {
+  if (!isValidProviderKey(providerKey)) {
+    throw new Error(`Invalid provider: ${providerKey}`);
+  }
+
   try {
-    // Extract PAT token
-    const { pat, ...credentialsData } = data;
+    // Extract PAT token if it exists
+    const { pat, ...credentialsData } = data as any;
     
-    // Store PAT token in Secret Manager
+    // Store PAT token in Secret Manager if provided
     if (pat) {
-      await storeUserTokens(userId, 'azure', pat);
+      await storeUserTokens(userId, providerKey, pat);
     }
     
     // Store credentials (without PAT) in Firestore
     const docRef = doc(db, credentialsCollection, userId);
-    await setDoc(docRef, { azure: credentialsData }, { merge: true });
+    await setDoc(docRef, { [providerKey]: credentialsData }, { merge: true });
   } catch (error) {
-    console.error('Error setting Azure credentials:', error);
-    throw error;
-  }
-}
-
-export async function setGithubCredentials(
-  userId: string,
-  data: GitHubFormValues
-) {
-  try {
-    // Extract PAT token
-    const { pat, ...credentialsData } = data;
-    
-    // Store PAT token in Secret Manager
-    if (pat) {
-      await storeUserTokens(userId, 'github', pat);
-    }
-    
-    // Store credentials (without PAT) in Firestore
-    const docRef = doc(db, credentialsCollection, userId);
-    await setDoc(docRef, { github: credentialsData }, { merge: true });
-  } catch (error) {
-    console.error('Error setting GitHub credentials:', error);
-    throw error;
-  }
-}
-
-export async function deleteAzureCredentials(userId: string) {
-  try {
-    // Delete PAT token from Secret Manager
-    await deleteUserToken(userId, 'azure');
-    
-    // Delete credentials from Firestore
-    const docRef = doc(db, credentialsCollection, userId);
-    await updateDoc(docRef, {
-      azure: deleteField()
-    });
-  } catch (error) {
-    console.error('Error deleting Azure credentials:', error);
-    throw error;
-  }
-}
-
-export async function deleteGithubCredentials(userId: string) {
-  try {
-    // Delete PAT token from Secret Manager
-    await deleteUserToken(userId, 'github');
-    
-    // Delete credentials from Firestore
-    const docRef = doc(db, credentialsCollection, userId);
-    await updateDoc(docRef, {
-      github: deleteField()
-    });
-  } catch (error) {
-    console.error('Error deleting GitHub credentials:', error);
+    console.error(`Error setting ${providerKey} credentials:`, error);
     throw error;
   }
 }
 
 /**
- * Utility function to get a specific provider's PAT token
+ * Generic function to delete provider credentials
  */
-export async function getProviderToken(
-  userId: string, 
-  provider: 'azure' | 'github'
-): Promise<string | null> {
-  return await getUserToken(userId, provider);
+export async function deleteProviderCredentials(userId: string, providerKey: ProviderKey) {
+  if (!isValidProviderKey(providerKey)) {
+    throw new Error(`Invalid provider: ${providerKey}`);
+  }
+
+  try {
+    // Delete PAT token from Secret Manager
+    await deleteUserToken(userId, providerKey);
+    
+    // Delete credentials from Firestore
+    const docRef = doc(db, credentialsCollection, userId);
+    await updateDoc(docRef, {
+      [providerKey]: deleteField()
+    });
+  } catch (error) {
+    console.error(`Error deleting ${providerKey} credentials:`, error);
+    throw error;
+  }
 }

@@ -25,7 +25,7 @@ import {
 import { CredentialDialog } from './credential-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/auth-context';
-import { deleteAzureCredentials, deleteGithubCredentials } from '@/lib/firebase/firestore';
+import { deleteProviderCredentials } from '@/lib/firebase/firestore';
 import { type ProviderKey } from '@/lib/providers';
 
 interface CredentialCardProps {
@@ -56,11 +56,7 @@ export default function CredentialCard({
     if (!user) return;
     setIsDeleting(true);
     try {
-      if (serviceKey === 'azure') {
-        await deleteAzureCredentials(user.uid);
-      } else {
-        await deleteGithubCredentials(user.uid);
-      }
+      await deleteProviderCredentials(user.uid, serviceKey);
       toast({
         title: 'Success',
         description: `${serviceName} credentials have been deleted.`,

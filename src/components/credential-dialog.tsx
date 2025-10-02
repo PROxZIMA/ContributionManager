@@ -26,10 +26,10 @@ import {
 } from '@/components/ui/form';
 import { useAuth } from '@/contexts/auth-context';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  getProvider, 
-  type ProviderKey, 
-  type ProviderCredentials 
+import {
+  getProvider,
+  type ProviderKey,
+  type ProviderCredentials
 } from '@/lib/providers';
 import { z } from 'zod';
 
@@ -54,14 +54,14 @@ export function CredentialDialog({
   const [showPat, setShowPat] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
-  
+
   const provider = getProvider(providerKey);
   const isEditing = !!initialData;
   const currentSchema = provider.schema;
   const updateSchema = currentSchema.partial().extend({
     pat: currentSchema.shape.pat.optional().or(z.literal('')),
   });
-  
+
   const resolver = zodResolver(isEditing ? updateSchema : currentSchema);
 
   const form = useForm({
@@ -82,14 +82,15 @@ export function CredentialDialog({
 
     let finalValues = { ...values };
     if (isEditing && initialData) {
-        finalValues = { ...initialData, ...values };
-        if (!values.pat) {
-            finalValues.pat = initialData.pat;
-        }
+      finalValues = { ...initialData, ...values };
+      // Only include PAT if it's different from the initial data or if there's no initial PAT
+      if (!values.pat || values.pat === initialData.pat) {
+        delete finalValues.pat;
+      }
     }
 
     try {
-      await provider.saveCredentials(user.uid, finalValues);
+      await provider.saveCredentials(user.uid, providerKey, finalValues);
       toast({
         title: 'Success!',
         description: `Your ${provider.name} credentials have been saved.`,
@@ -122,51 +123,51 @@ export function CredentialDialog({
             {provider.fieldsOrder.map((fieldKey) => {
               const config = provider.fields[fieldKey];
               return (
-              <FormField
-                key={fieldKey}
-                control={form.control}
-                name={fieldKey as any}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{config.label}</FormLabel>
-                    <FormControl>
-                      {fieldKey === 'pat' ? (
-                        <div className="relative">
+                <FormField
+                  key={fieldKey}
+                  control={form.control}
+                  name={fieldKey as any}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{config.label}</FormLabel>
+                      <FormControl>
+                        {fieldKey === 'pat' ? (
+                          <div className="relative">
+                            <Input
+                              type={showPat ? 'text' : 'password'}
+                              placeholder={config.placeholder}
+                              className="pr-10"
+                              {...field}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent hover:text-foreground"
+                              onClick={() => setShowPat(!showPat)}
+                            >
+                              {showPat ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        ) : (
                           <Input
-                            type={showPat ? 'text' : 'password'}
+                            type={config.type}
                             placeholder={config.placeholder}
-                            className="pr-10"
                             {...field}
                           />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent hover:text-foreground"
-                            onClick={() => setShowPat(!showPat)}
-                          >
-                            {showPat ? (
-                              <EyeOff className="h-4 w-4" />
-                            ) : (
-                              <Eye className="h-4 w-4" />
-                            )}
-                          </Button>
-                        </div>
-                      ) : (
-                        <Input
-                          type={config.type}
-                          placeholder={config.placeholder}
-                          {...field}
-                        />
-                      )}
-                    </FormControl>
-                    {fieldKey === 'pat' && isEditing && (
+                        )}
+                      </FormControl>
+                      {fieldKey === 'pat' && isEditing && (
                         <FormDescription>Leave blank to keep current PAT.</FormDescription>
-                    )}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               );
             })}
             <DialogFooter>
