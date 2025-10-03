@@ -27,9 +27,9 @@ const NotFoundPage = () => {
   ]
 
   const router = useRouter();
-  const inputRef = useRef(null);
-  const outputRef = useRef(null);
-  const lastOpRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const outputRef = useRef<HTMLParagraphElement>(null);
+  const lastOpRef = useRef<HTMLDivElement>(null);
 
   const [input, setInput] = useState('');
   const [history, setHistory] = React.useState<Array<JSX.Element>>([
@@ -42,18 +42,18 @@ const NotFoundPage = () => {
     </p>,
   ]);
 
-  const textEffect = (line) => {
+  const textEffect = (line: HTMLElement) => {
     let alpha = [';', '.', ',', ':', ';', '~', '`'],
       index = 0,
       string = line.innerHTML;
     let splitString = string.split('');
     let copyString = splitString.slice(0);
-    let emptyString = copyString.map(() => [
+    let emptyString: [string, number][] = copyString.map(() => [
       alpha[Math.floor(Math.random() * alpha.length)],
       index++,
-    ]);
+    ] as [string, number]);
     emptyString = shuffle(emptyString);
-    emptyString.forEach((char, i) => {
+    emptyString.forEach((char: [string, number], i: number) => {
       toUnderscore(copyString, line, char);
       setTimeout(function () {
         fromUnderscore(copyString, splitString, char, line);
@@ -61,17 +61,17 @@ const NotFoundPage = () => {
     });
   };
 
-  const toUnderscore = (copyString, line, newChar) => {
+  const toUnderscore = (copyString: string[], line: HTMLElement, newChar: [string, number]) => {
     copyString[newChar[1]] = newChar[0];
     line.innerHTML = copyString.join('');
   };
 
-  const fromUnderscore = (copyString, splitString, newChar, line) => {
+  const fromUnderscore = (copyString: string[], splitString: string[], newChar: [string, number], line: HTMLElement) => {
     copyString[newChar[1]] = splitString[newChar[1]];
     line.innerHTML = copyString.join('');
   };
 
-  const shuffle = (o) => {
+  const shuffle = (o: [string, number][]) => {
     for (
       let j, x, i = o.length;
       i;
@@ -112,13 +112,15 @@ const NotFoundPage = () => {
       </div>,
     ]);
 
-    let lines = [...lastOpRef.current.childNodes].slice(-errorAscii.length);
-    lines.forEach((line, index) => {
-      setTimeout(function () {
-        line.style.opacity = 1;
-        textEffect(line);
-      }, index * 100);
-    });
+    if (lastOpRef.current) {
+      let lines = [...lastOpRef.current.childNodes].slice(-errorAscii.length) as HTMLElement[];
+      lines.forEach((line, index) => {
+        setTimeout(function () {
+          (line as HTMLElement).style.opacity = '1';
+          textEffect(line as HTMLElement);
+        }, index * 100);
+      });
+    }
     setInput('');
   };
 
@@ -146,7 +148,9 @@ const NotFoundPage = () => {
   useEffect(() => {
     if (outputRef.current) {
       outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      inputRef.current.focus({ preventScroll: true });
+      if (inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
     }
   }, [history]);
 
@@ -158,12 +162,12 @@ const NotFoundPage = () => {
 
       <div
         className="overflow-hidden h-full"
-        onClick={() => inputRef.current.focus({ preventScroll: true })}
+        onClick={() => inputRef.current?.focus({ preventScroll: true })}
       >
         <div className="overflow-y-auto h-full">
           <form className={style.four_oh_four_form} onSubmit={onSubmit}>
             <input
-              type={style.text}
+              type="text"
               className={style.input_404}
               ref={inputRef}
               onChange={onChange}

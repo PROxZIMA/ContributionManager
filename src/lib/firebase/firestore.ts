@@ -1,15 +1,13 @@
-import { doc, getDoc, setDoc, updateDoc, FieldValue, deleteField } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteField } from 'firebase/firestore';
 import { db } from './config';
 import type { AzureFormValues, GitHubFormValues } from '@/lib/schemas';
 import { 
   storeUserTokens, 
-  getUserToken, 
   deleteUserToken, 
   getUserTokens 
 } from './secret-manager-client';
 import { 
   getAllProviders, 
-  getProvider, 
   isValidProviderKey,
   type ProviderKey,
   type ProviderData,

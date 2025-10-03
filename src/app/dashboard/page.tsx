@@ -1,10 +1,4 @@
 import DashboardClient from '@/components/dashboard-client';
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 
 export default function DashboardPage() {
   return (

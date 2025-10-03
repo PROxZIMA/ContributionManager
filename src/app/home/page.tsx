@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Github, Key, Users, Clock, Database, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import { Key, Users, Clock, Database, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import ActivityCalendar from 'react-activity-calendar';
 import Link from 'next/link';
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,15 +17,15 @@ import { Separator } from '@/components/ui/separator';
 import Header from '@/components/header';
 import { ContributionsResponse, Contribution } from '@/lib/schemas';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { TooltipArrow, TooltipPortal } from '@radix-ui/react-tooltip';
+import { TooltipPortal } from '@radix-ui/react-tooltip';
 
 // Sample data for demonstration
 const sampleContributions: Contribution[] = [
-  { date: '2024-01-01', count: 3, level: 1 },
-  { date: '2024-01-02', count: 8, level: 2 },
-  { date: '2024-01-03', count: 15, level: 3 },
-  { date: '2024-01-04', count: 25, level: 4 },
-  { date: '2024-01-05', count: 2, level: 1 },
+  { date: '2024-01-01', count: 0, level: 0 },
+  { date: '2024-01-02', count: 3, level: 1 },
+  { date: '2024-01-03', count: 8, level: 2 },
+  { date: '2024-01-04', count: 12, level: 3 },
+  { date: '2024-01-05', count: 18, level: 4 },
 ];
 
 const sampleResponse: ContributionsResponse = {
@@ -438,7 +439,7 @@ export default function HomePage() {
                       <Database className="h-12 w-12 text-muted-foreground mb-4" />
                       <p className="text-muted-foreground mb-2">No data loaded yet</p>
                       <p className="text-sm text-muted-foreground">
-                        Enter your Firebase User ID above and click "Fetch Data" to see your contributions
+                        Enter your Firebase User ID above and click &quot;Fetch Data&quot; to see your contributions
                       </p>
                     </div>
                   )}
@@ -446,9 +447,9 @@ export default function HomePage() {
                   {!isLoading && apiData && (
                     <div className="space-y-4">
                       <ActivityCalendar
-                        data={apiData.contributions}
+                        data={apiData.contributions.length > 0 ? apiData.contributions : sampleContributions}
                         labels={defaultLabels}
-                        totalCount={apiData.total[year]}
+                        totalCount={apiData.total[year] ?? 0}
                         theme={{
                           light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
                           dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353']

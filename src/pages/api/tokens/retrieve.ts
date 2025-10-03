@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserTokensServer } from '@/lib/server/secret-manager-server';
-import { getAuthToken, validateAuthToken, getUserIdFromRequest } from '@/lib/server/auth-utils';
+import { getAuthToken, validateAuthToken } from '@/lib/server/auth-utils';
 
 export default async function handler(
   req: NextApiRequest,

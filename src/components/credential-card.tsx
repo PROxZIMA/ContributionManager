@@ -34,7 +34,6 @@ interface CredentialCardProps {
   icon: React.ReactNode;
   description: string;
   data: any;
-  fields: string[];
   onUpdate: () => void;
 }
 
@@ -44,7 +43,6 @@ export default function CredentialCard({
   icon,
   description,
   data,
-  fields,
   onUpdate,
 }: CredentialCardProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

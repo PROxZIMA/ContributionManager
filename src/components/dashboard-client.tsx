@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
-import { getCompleteCredentials, TCompleteCredentials } from '@/lib/firebase/firestore';
+import { getCompleteCredentials } from '@/lib/firebase/firestore';
 import CredentialCard from './credential-card';
 import { Loader2 } from 'lucide-react';
 import { getAllProviders, type ProviderData } from '@/lib/providers';
@@ -77,7 +77,6 @@ export default function DashboardClient() {
               icon={<IconComponent className="h-8 w-8 text-primary" />}
               description={provider.description}
               data={credentials?.[provider.key]}
-              fields={provider.fieldsOrder as any}
               onUpdate={onCredentialUpdate}
             />
           );
