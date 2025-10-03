@@ -51,7 +51,7 @@ const defaultLabels = {
 }
 
 export default function HomePage() {
-  const [userId, setUserId] = useState('m71t0rTNx4ba7zEXfOopoeCApkK2');
+  const [userId, setUserId] = useState('');
   const [year, setYear] = useState('2024');
   const [providers, setProviders] = useState('github,azure');
   const [includeActivity, setIncludeActivity] = useState(false);
@@ -129,7 +129,7 @@ export default function HomePage() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-primary mb-4">
-            Contribution Token Manager API
+            Contribution Hub API
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
             Aggregate and visualize your contributions across multiple version control platforms
@@ -485,7 +485,6 @@ export default function HomePage() {
                         )}
                         showWeekdayLabels
                       />
-
                       {/* Statistics Grid */}
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                         <div className="text-center">
@@ -565,7 +564,7 @@ export default function HomePage() {
           <CardHeader>
             <CardTitle>Getting Started</CardTitle>
             <CardDescription>
-              Follow these steps to start using the Contribution Token Manager API
+              Follow these steps to start using the Contribution Hub API
             </CardDescription>
           </CardHeader>
           <CardContent>

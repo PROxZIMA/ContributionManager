@@ -28,7 +28,7 @@ export default function RootLayout({
 
         <meta property="og:title" content="Contribution Token Manager" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://proxzima.dev" />
+        <meta property="og:url" content="https://c-m-app.azurewebsites.net" />
         <meta property="og:description" content="Manage your API credentials for your version control services." />
         {/* <meta
           property="og:image"

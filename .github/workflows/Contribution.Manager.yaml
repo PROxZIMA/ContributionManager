@@ -1,0 +1,118 @@
+name: Contribution Manager App
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'next.config.ts'
+      - 'tailwind.config.ts'
+      - 'tsconfig.json'
+      - '.github/workflows/Contribution.Manager.yaml'
+  # pull_request:
+  #   branches: [ master, main ]
+  #   paths:
+  #     - 'src/**'
+  #     - 'public/**'
+  #     - 'package.json'
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_WEBAPP_NAME: c-m-app
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  NODE_VERSION: '22.x'
+  GOOGLE_APPLICATION_CREDENTIALS: 'contribution-manager.json'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Check out the repo
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      # Login to Azure
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS_MANAGER }}
+
+      # Setup Node.js
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # Install dependencies
+      - name: 'Install dependencies'
+        run: |
+          npm ci
+
+      # Type check
+      - name: 'Type check'
+        run: |
+          npm run typecheck
+
+      # Lint code
+      - name: 'Lint code'
+        run: |
+          npm run lint
+
+      # Create production .env file
+      - name: 'Create production .env file'
+        run: |
+          cat > .env.production << EOF
+          NODE_ENV=production
+          NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+          NEXT_PUBLIC_FIREBASE_FIRESTORE_DATABASE=${{ secrets.NEXT_PUBLIC_FIREBASE_FIRESTORE_DATABASE }}
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+          NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+          NEXT_PUBLIC_CONTRIBUTION_API_URL=${{ secrets.NEXT_PUBLIC_CONTRIBUTION_API_URL }}
+          GOOGLE_APPLICATION_CREDENTIALS=contribution-manager.json
+          EOF
+          echo "Production .env file created successfully"
+
+      # Build application
+      - name: 'Build application'
+        run: |
+          npm run build
+          mv ./build/static ./build/standalone/build
+          mv ./public ./build/standalone
+
+      # Setup Google Application Credentials and copy .env file
+      - name: Setup Google Application Credentials
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" | base64 --decode > ./build/standalone/contribution-manager.json
+          mv .env.production ./build/standalone/.env.production
+          echo "Google credentials and .env file configured successfully"
+
+      # # No Upload build artifacts for debugging until google credentials json is sorted via env
+      # - name: Upload build artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: nextjs-deployment-package
+      #     path: ./build/standalone
+      #     retention-days: 30
+
+      # Deploy to Azure Web App
+      - name: 'Deploy to Azure Web App'
+        uses: azure/webapps-deploy@v3
+        with: 
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: ./build/standalone
+
+      # Azure logout 
+      - name: logout
+        run: |
+          az logout
