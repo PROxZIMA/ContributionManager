@@ -120,7 +120,7 @@ export default function HomePage() {
     if (activeTab === 'demo' && !apiData && !isLoading && userId.trim()) {
       fetchContributionData();
     }
-  }, [activeTab, userId]);
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-background">
