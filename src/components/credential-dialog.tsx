@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Eye, EyeOff, HelpCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +15,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import {
   Form,
   FormControl,
@@ -41,6 +46,103 @@ interface CredentialDialogProps {
   onSuccess: () => void;
 }
 
+// Helper component for PAT generation instructions
+interface PATHelpProps {
+  providerKey: ProviderKey;
+}
+
+function PATHelp({ providerKey }: PATHelpProps) {
+  const helpContent = {
+    github: {
+      title: 'GitHub Personal Access Token',
+      steps: [
+        {
+          step: 1,
+          text: 'Go to GitHub Settings → Developer settings → Personal access tokens',
+          url: 'https://github.com/settings/tokens/new'
+        },
+        {
+          step: 2,
+          text: 'Generate new token (classic) with these minimal scopes:',
+          items: ['read:user (Read ALL user profile data)']
+        }
+      ],
+      images: [
+        '/setup/github/gh-token-creation.png'
+      ]
+    },
+    azure: {
+      title: 'Azure DevOps Personal Access Token',
+      steps: [
+        {
+          step: 1,
+          text: 'Go to Azure DevOps → User Settings → Personal access tokens'
+        },
+        {
+          step: 2,
+          text: 'Create new token with these minimal permissions:',
+          items: [
+            'Code: Read',
+            'Identity: Read', 
+            'Work Items: Read'
+          ]
+        }
+      ],
+      images: [
+        '/setup/azure/az-pat-location.png',
+        '/setup/azure/az-token-creation.png'
+      ]
+    }
+  };
+
+  const config = helpContent[providerKey];
+  if (!config) return null;
+
+  return (
+    <div className="space-y-4 text-sm">
+      <h4 className="font-semibold text-foreground">{config.title}</h4>
+      
+      {config.steps.map((step) => (
+        <div key={step.step} className="space-y-2">
+          <div className="flex items-start gap-2">
+            <span className="flex-shrink-0 w-5 h-5 bg-primary text-primary-foreground rounded-full text-xs flex items-center justify-center font-medium">
+              {step.step}
+            </span>
+            <div className="flex-1">
+              <p className="text-muted-foreground">{step.text}</p>
+              {'url' in step && (
+                <a
+                  href={step.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-1"
+                >
+                  Open GitHub Settings <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
+              {step.items && (
+                <ul className="mt-2 ml-4 space-y-1">
+                  {step.items.map((item, index) => (
+                    <li key={index} className="text-muted-foreground flex items-center gap-2">
+                      <div className="w-1 h-1 bg-muted-foreground rounded-full flex-shrink-0" />
+                      <code className="text-xs bg-muted px-1.5 py-0.5 rounded">{item}</code>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-md border-l-2 border-primary/20">
+        <p className="font-medium mb-1">Security Best Practice:</p>
+        <p>Only grant the minimal required permissions listed above. This follows the principle of least privilege and keeps your account secure.</p>
+      </div>
+    </div>
+  );
+}
+
 // All configuration now comes from the centralized providers config
 
 export function CredentialDialog({
@@ -52,6 +154,7 @@ export function CredentialDialog({
 }: CredentialDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPat, setShowPat] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -118,6 +221,33 @@ export function CredentialDialog({
             Enter your credentials below. Your sensitive information will be stored securely.
           </DialogDescription>
         </DialogHeader>
+        
+        {/* PAT Generation Help Section */}
+        <Collapsible open={showHelp} onOpenChange={setShowHelp}>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between h-auto p-3 text-left border border-dashed border-muted-foreground/30 hover:border-muted-foreground/50"
+            >
+              <div className="flex items-center gap-2">
+                <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Need help generating a PAT?</span>
+              </div>
+              {showHelp ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3">
+            <div className="border rounded-md p-4 bg-muted/20">
+              <PATHelp providerKey={providerKey} />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
             {provider.fieldsOrder.map((fieldKey) => {

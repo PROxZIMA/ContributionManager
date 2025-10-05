@@ -53,8 +53,8 @@ export default function Header() {
               priority
             />
           </div>
-          <span className="hidden sm:inline">Contribution Token Manager</span>
-          <span className="sm:hidden">CTM</span>
+          <span className="hidden sm:inline">Contribution Hub Manager</span>
+          <span className="sm:hidden">CHM</span>
         </Link>
         <div className="ml-auto flex items-center space-x-4">
           {user ? (

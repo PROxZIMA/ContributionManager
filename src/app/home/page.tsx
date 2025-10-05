@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, use } from 'react';
-import { Key, Users, Clock, Database, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import { Key, Users, Clock, Database, AlertCircle, Loader2, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import ActivityCalendar from 'react-activity-calendar';
 import Link from 'next/link';
 
@@ -14,6 +14,11 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import Header from '@/components/header';
 import { ContributionsResponse, Contribution } from '@/lib/schemas';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -65,6 +70,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showResponse, setShowResponse] = useState(false);
 
   const buildApiUrl = () => {
     const baseUrl = process.env.NEXT_PUBLIC_CONTRIBUTION_API_URL || 'https://localhost:5298';
@@ -193,10 +199,9 @@ export default function HomePage() {
 
         {/* API Documentation */}
         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mb-12">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview" id="overview">Overview</TabsTrigger>
-            <TabsTrigger value="endpoint" id="endpoint">API Endpoint</TabsTrigger>
-            <TabsTrigger value="response" id="response">Response Format</TabsTrigger>
+            <TabsTrigger value="endpoint" id="endpoint">API Reference</TabsTrigger>
             <TabsTrigger value="demo" id="demo">Live Demo</TabsTrigger>
           </TabsList>
 
@@ -239,48 +244,49 @@ export default function HomePage() {
           </TabsContent>
 
           <TabsContent value="endpoint" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>GET /Contributions</CardTitle>
-                <CardDescription>Retrieve contribution data for a user</CardDescription>
-              </CardHeader>
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>GET /Contributions</CardTitle>
+                  <CardDescription>Retrieve contribution data for users with stored credentials</CardDescription>
+                </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div>
                     <h4 className="font-semibold mb-3">Query Parameters</h4>
                     <div className="space-y-3">
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <div className="font-medium">Parameter</div>
                         <div className="font-medium">Type</div>
                         <div className="font-medium">Required</div>
                         <div className="font-medium">Description</div>
                       </div>
                       <Separator />
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <code>userId</code>
                         <span>string</span>
                         <Badge variant="destructive" className="w-fit h-fit">Required</Badge>
                         <span>Firebase User ID (obtained after login via dashboard)</span>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <code>year</code>
                         <span>int</span>
                         <Badge variant="destructive" className="w-fit h-fit">Required</Badge>
                         <span>Year to retrieve data for</span>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <code>providers</code>
                         <span>string[]</span>
                         <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
                         <span>Platform filters (github, azure)</span>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <code>includeActivity</code>
                         <span>bool</span>
                         <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
                         <span>Include activity breakdown per day</span>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-sm">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
                         <code>includeBreakdown</code>
                         <span>bool</span>
                         <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
@@ -288,35 +294,142 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Response Format as Collapsible */}
+                  <Collapsible open={showResponse} onOpenChange={setShowResponse}>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between"
+                      >
+                        <span className="font-semibold">Response Format</span>
+                        {showResponse ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4">
+                      <div className="space-y-4 border rounded-lg p-4 bg-muted/20">
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-3">JSON structure returned by the API:</p>
+                          <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
+                            {JSON.stringify(sampleResponse, null, 2)}
+                          </pre>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="font-semibold">Response Fields</h4>
+                          <div className="space-y-2 text-sm">
+                            <div><strong>total:</strong> Contribution counts per year</div>
+                            <div><strong>contributions:</strong> Daily contribution data with levels (0-4)</div>
+                            <div><strong>breakdown:</strong> Activity breakdown by type (commits, PRs, issues)</div>
+                            <div><strong>meta:</strong> Metadata about the request (performance, errors)</div>
+                          </div>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
 
-          <TabsContent value="response" className="mt-6">
             <Card>
               <CardHeader>
-                <CardTitle>Response Format</CardTitle>
-                <CardDescription>JSON structure returned by the API</CardDescription>
+                <CardTitle>POST /Contributions</CardTitle>
+                <CardDescription>Retrieve contribution data by providing credentials directly in the request body</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                    {JSON.stringify(sampleResponse, null, 2)}
-                  </pre>
-
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Response Fields</h4>
-                    <div className="space-y-2 text-sm">
-                      <div><strong>total:</strong> Contribution counts per year</div>
-                      <div><strong>contributions:</strong> Daily contribution data with levels (0-4)</div>
-                      <div><strong>breakdown:</strong> Activity breakdown by type (commits, PRs, issues)</div>
-                      <div><strong>meta:</strong> Metadata about the request (performance, errors)</div>
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="font-semibold mb-3">Query Parameters</h4>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
+                        <div className="font-medium">Parameter</div>
+                        <div className="font-medium">Type</div>
+                        <div className="font-medium">Required</div>
+                        <div className="font-medium">Description</div>
+                      </div>
+                      <Separator />
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
+                        <code>year</code>
+                        <span>int</span>
+                        <Badge variant="destructive" className="w-fit h-fit">Required</Badge>
+                        <span>Year to retrieve data for</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
+                        <code>providers</code>
+                        <span>string[]</span>
+                        <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
+                        <span>Platform filters (github, azure)</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
+                        <code>includeActivity</code>
+                        <span>bool</span>
+                        <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
+                        <span>Include activity breakdown per day</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_2fr] gap-2 text-sm">
+                        <code>includeBreakdown</code>
+                        <span>bool</span>
+                        <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
+                        <span>Include total breakdown by activity type</span>
+                      </div>
                     </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-3">Request Body</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      JSON object containing platform credentials. Include credentials for the platforms you want to query.
+                    </p>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-2 text-sm">
+                        <div className="font-medium">Platform</div>
+                        <div className="font-medium">Required Fields</div>
+                      </div>
+                      <Separator />
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-2 text-sm">
+                        <code>azure</code>
+                        <div className="space-y-1">
+                          <div><code className="text-xs">email</code> - Azure DevOps email</div>
+                          <div><code className="text-xs">organization</code> - Azure DevOps organization name</div>
+                          <div><code className="text-xs">token</code> - Personal Access Token</div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-2 text-sm">
+                        <code>gitHub</code>
+                        <div className="space-y-1">
+                          <div><code className="text-xs">username</code> - GitHub username</div>
+                          <div><code className="text-xs">token</code> - Personal Access Token</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-3">Example Request</h4>
+                    <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
+{`curl -X POST "http://localhost:5298/contributions?year=2025&providers=github&providers=azure&includeBreakdown=true" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "azure": {
+        "email": "john.doe@company.com",
+        "organization": "CompanyOrg", 
+        "token": "{{AZURE_DEVOPS_WORK_PAT}}"
+    },
+    "gitHub": {
+        "username": "johndoe",
+        "token": "{{GITHUB_PERSONAL_PAT}}"
+    }
+}'`}
+                    </pre>
                   </div>
                 </div>
               </CardContent>
             </Card>
+          </div>
           </TabsContent>
 
           <TabsContent value="demo" className="mt-6">

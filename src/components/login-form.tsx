@@ -196,7 +196,7 @@ export default function LoginForm() {
     <Card className="w-full max-w-sm shadow-xl">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold tracking-tight">
-          Contribution Token Manager
+          Contribution Hub Manager
         </CardTitle>
         <CardDescription>
           {isSignUp ? 'Create an account' : 'Sign in to manage your API credentials'}

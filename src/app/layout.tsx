@@ -4,7 +4,7 @@ import { AuthProvider } from '@/contexts/auth-context';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Contribution Token Manager',
+  title: 'Contribution Hub Manager',
   description: 'Manage your API credentials for your version control services.'
 };
 
@@ -22,11 +22,11 @@ export default function RootLayout({
           key="viewport"
           maximum-scale="1"
         />
-        <title>Contribution Token Manager</title>
+        <title>Contribution Hub Manager</title>
         <meta name="author" content="Pratik Pingale" />
         <meta name="description" content="Manage your API credentials for your version control services." />
 
-        <meta property="og:title" content="Contribution Token Manager" />
+        <meta property="og:title" content="Contribution Hub Manager" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://c-m-app.azurewebsites.net" />
         <meta property="og:description" content="Manage your API credentials for your version control services." />
