@@ -37,6 +37,10 @@
 
 Contribution Hub Manager is a secure web application that serves as the frontend interface for the [Contribution Hub API](https://github.com/PROxZIMA/ContributionAPI). It enables developers to manage their authentication credentials for multiple platforms (GitHub, Azure DevOps) in a secure, encrypted manner and visualize their aggregated contributions across all platforms.
 
+<div align="center">
+  <img src="https://c-hub-api.azurewebsites.net/contributions/svg?userId=6SqDR5hL6rSnVZwAycOX3BBFxjK2&year=2025&darkMode=true" alt="Contribution Activity">
+</div>
+
 ### Key Features
 
 - **Secure Authentication**: Sign-in/sign-up using Google or GitHub via Firebase Authentication
