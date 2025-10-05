@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { Key, Users, Clock, Database, AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import ActivityCalendar from 'react-activity-calendar';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import Header from '@/components/header';
 import { ContributionsResponse, Contribution } from '@/lib/schemas';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { TooltipPortal } from '@radix-ui/react-tooltip';
+import { useAuth } from '@/contexts/auth-context';
 
 // Sample data for demonstration
 const sampleContributions: Contribution[] = [
@@ -52,8 +53,9 @@ const defaultLabels = {
 }
 
 export default function HomePage() {
+  const { user } = useAuth();
   const [userId, setUserId] = useState('');
-  const [year, setYear] = useState('2024');
+  const [year, setYear] = useState('2025');
   const [providers, setProviders] = useState('github,azure');
   const [includeActivity, setIncludeActivity] = useState(false);
   const [includeBreakdown, setIncludeBreakdown] = useState(true);
@@ -122,6 +124,13 @@ export default function HomePage() {
     }
   }, [activeTab]);
 
+  // Update userId when user log in state changes
+  useEffect(() => {
+    if (user) {
+      setUserId(user.uid);
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -185,9 +194,9 @@ export default function HomePage() {
         {/* API Documentation */}
         <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mb-12">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="endpoint">API Endpoint</TabsTrigger>
-            <TabsTrigger value="response">Response Format</TabsTrigger>
+            <TabsTrigger value="overview" id="overview">Overview</TabsTrigger>
+            <TabsTrigger value="endpoint" id="endpoint">API Endpoint</TabsTrigger>
+            <TabsTrigger value="response" id="response">Response Format</TabsTrigger>
             <TabsTrigger value="demo" id="demo">Live Demo</TabsTrigger>
           </TabsList>
 
@@ -510,9 +519,9 @@ export default function HomePage() {
                             </div>
                             <div className="text-center">
                               <div className="text-2xl font-bold text-primary">
-                                {apiData.breakdown.issues || 0}
+                                {(apiData.breakdown.issues || 0) + (apiData.breakdown.workitems || 0)}
                               </div>
-                              <div className="text-sm text-muted-foreground">Issues</div>
+                              <div className="text-sm text-muted-foreground">Work Items/Issues</div>
                             </div>
                           </>
                         )}
