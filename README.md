@@ -63,7 +63,7 @@ Contribution Hub Manager is a secure web application that serves as the frontend
 
 ## Architecture
 
-ContributionManager follows a microservices architecture pattern, working in conjunction with the Contribution Hub API.
+ContributionManager follows a microservices architecture pattern, working in conjunction with the [Contribution Hub API](https://github.com/PROxZIMA/ContributionAPI).
 
 ### System Overview
 
