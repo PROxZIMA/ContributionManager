@@ -1,8 +1,5 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
-// Set Google Application Credentials for server-side use
-process.env.GOOGLE_APPLICATION_CREDENTIALS = 'contribution-manager.json';
-
 // This file should only be used server-side (API routes, getServerSideProps, etc.)
 const client = new SecretManagerServiceClient();
 
