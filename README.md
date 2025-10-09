@@ -9,8 +9,8 @@
 
   <!-- Badges -->
   <p>
-    <a href="https://github.com/PROxZIMA/ContributionManager/actions/workflows/Contribution.Manager.yaml">
-      <img src="https://github.com/PROxZIMA/ContributionManager/actions/workflows/Contribution.Manager.yaml/badge.svg" alt="Contribution Hub Manager">
+    <a href="https://github.com/PROxZIMA/ContributionManager/actions/workflows/Contribution.Manager.VPS.yaml">
+      <img src="https://github.com/PROxZIMA/ContributionManager/actions/workflows/Contribution.Manager.VPS.yaml/badge.svg" alt="Contribution Hub Manager">
     </a>
     <a href="LICENSE">
       <img src="https://img.shields.io/github/license/PROxZIMA/ContributionManager" alt="License">
@@ -38,7 +38,7 @@
 Contribution Hub Manager is a secure web application that serves as the frontend interface for the [Contribution Hub API](https://github.com/PROxZIMA/ContributionAPI). It enables developers to manage their authentication credentials for multiple platforms (GitHub, Azure DevOps) in a secure, encrypted manner and visualize their aggregated contributions across all platforms.
 
 <div align="center">
-  <img src="https://c-hub-api.azurewebsites.net/contributions/svg?userId=6SqDR5hL6rSnVZwAycOX3BBFxjK2&year=2025&darkMode=true&" alt="Contribution Activity">
+  <img src="https://chm.proxzima.dev/_api/contributions/svg?userId=6SqDR5hL6rSnVZwAycOX3BBFxjK2&year=2025&darkMode=true&" alt="Contribution Activity">
 </div>
 
 ### Key Features
@@ -221,7 +221,7 @@ graph TB
 ## API Documentation
 
 For detailed API documentation and interactive examples, visit:
-**[https://c-m-app.azurewebsites.net/home#endpoint](https://c-m-app.azurewebsites.net/home#endpoint)**
+**[https://chm.proxzima.dev/home#endpoint](https://chm.proxzima.dev/home#endpoint)**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

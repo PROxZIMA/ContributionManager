@@ -61,7 +61,7 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
       });
     }
 
-    return `${baseUrl}/Contributions?${params.toString()}`;
+    return `${baseUrl}/contributions?${params.toString()}`;
   };
 
   const fetchContributionData = async () => {

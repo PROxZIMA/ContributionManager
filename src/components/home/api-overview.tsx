@@ -16,7 +16,7 @@ export default function APIOverview() {
         <div>
           <h4 className="font-semibold mb-2">Base URL</h4>
           <code className="bg-muted px-2 py-1 rounded text-sm">
-            {process.env.NEXT_PUBLIC_CONTRIBUTION_API_URL}/Contributions
+            {process.env.NEXT_PUBLIC_CONTRIBUTION_API_URL}/contributions
           </code>
         </div>
 
