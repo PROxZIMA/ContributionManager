@@ -59,7 +59,7 @@ function PATHelp({ providerKey }: PATHelpProps) {
         {
           step: 1,
           text: 'Go to GitHub Settings → Developer settings → Personal access tokens',
-          url: 'https://github.com/settings/tokens/new'
+          url: 'https://github.com/settings/tokens/new?scopes=read:user&description=Credential%20Manager%20Token&default_expires_at=none'
         },
         {
           step: 2,
