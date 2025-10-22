@@ -12,8 +12,7 @@ export default function HeroSection() {
           Contribution Hub API
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-          Aggregate and visualize your contributions across multiple version control platforms
-          with our powerful API service.
+          Aggregate and visualize your contributions across multiple version control platforms.
         </p>
         <div className="flex justify-center gap-4">
           <Link href="/dashboard">
@@ -37,7 +36,7 @@ export default function HeroSection() {
             <Users className="h-8 w-8 text-primary mb-2" />
             <CardTitle>Multi-Platform</CardTitle>
             <CardDescription>
-              Supports GitHub, Azure DevOps, and more platforms
+              Supports GitHub, Azure DevOps, and many more platforms coming soon
             </CardDescription>
           </CardHeader>
         </Card>

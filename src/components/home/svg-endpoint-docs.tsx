@@ -47,10 +47,10 @@ export default function SvgEndpointDocs() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2">
                   <code>providers</code>
-                  <span>string[]</span>
+                  <span>string</span>
                   <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
                   <span>all</span>
-                  <span>Platform filters (github, azure)</span>
+                  <span>Comma-separated platform filters (e.g., "github,azure")</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2">
                   <code>blockMargin</code>
@@ -163,7 +163,7 @@ export default function SvgEndpointDocs() {
                     Generate a dark mode SVG calendar with custom styling:
                   </p>
                   <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                    {`GET /contributions/svg?userId=abc123&year=2024&providers=github&providers=azure&darkMode=true&blockSize=14&blockRadius=3&hideColorLegend=false&showLoadingAnimation=true`}
+                    {`GET /contributions/svg?userId=abc123&year=2024&providers=github,azure&darkMode=true&blockSize=14&blockRadius=3&hideColorLegend=false&showLoadingAnimation=true`}
                   </pre>
                 </div>
               </CollapsibleContent>
@@ -225,10 +225,10 @@ export default function SvgEndpointDocs() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2">
                   <code>providers</code>
-                  <span>string[]</span>
+                  <span>string</span>
                   <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
                   <span>all</span>
-                  <span>Platform filters (github, azure)</span>
+                  <span>Comma-separated platform filters (e.g., "github,azure")</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2">
                   <code>blockMargin</code>
@@ -369,7 +369,7 @@ export default function SvgEndpointDocs() {
                     Generate a dark mode SVG calendar with custom styling:
                   </p>
                   <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                    {`curl -X POST "http://localhost:5298/contributions/svg?year=2024&providers=github&providers=azure&darkMode=true&blockSize=14&blockRadius=3&hideColorLegend=false&showLoadingAnimation=true" \\
+                    {`curl -X POST "http://localhost:5298/contributions/svg?year=2024&providers=github,azure&darkMode=true&blockSize=14&blockRadius=3&hideColorLegend=false&showLoadingAnimation=true" \\
   -H "Content-Type: application/json" \\
   -d '{
     "azure": {

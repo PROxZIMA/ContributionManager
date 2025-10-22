@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { Loader2, RefreshCw, AlertCircle, Database } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,21 +13,41 @@ interface SvgApiBuilderProps {
   initialUserId?: string;
 }
 
+// Memoized SVG Preview component to prevent unnecessary re-renders
+const SvgPreview = memo(({ svgData }: { svgData: string }) => {
+  const svgContent = useMemo(() => ({ __html: svgData }), [svgData]);
+
+  return (
+    <div className="space-y-4">
+      <div className="border rounded-lg p-4 bg-muted/20 overflow-x-auto">
+        <div dangerouslySetInnerHTML={svgContent} />
+      </div>
+
+      <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-md">
+        <p className="font-medium mb-1">Usage:</p>
+        <p>You can embed this SVG directly in HTML, use it in GitHub READMEs, or save it as an image file.</p>
+      </div>
+    </div>
+  );
+});
+
+SvgPreview.displayName = 'SvgPreview';
+
 export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps) {
   const [svgUserId, setSvgUserId] = useState(initialUserId);
   const [svgYear, setSvgYear] = useState('2025');
-  const [svgProviders, setSvgProviders] = useState('github,azure');
-  const [svgDarkMode, setSvgDarkMode] = useState(false);
-  const [svgBlockSize, setSvgBlockSize] = useState('12');
-  const [svgBlockRadius, setSvgBlockRadius] = useState('2');
-  const [svgBlockMargin, setSvgBlockMargin] = useState('4');
-  const [svgFontSize, setSvgFontSize] = useState('14');
-  const [svgMaxLevel, setSvgMaxLevel] = useState('4');
-  const [svgWeekStart, setSvgWeekStart] = useState('0');
-  const [svgHideColorLegend, setSvgHideColorLegend] = useState(false);
-  const [svgHideMonthLabels, setSvgHideMonthLabels] = useState(false);
-  const [svgHideTotalCount, setSvgHideTotalCount] = useState(false);
-  const [svgHideWeekdayLabels, setSvgHideWeekdayLabels] = useState(false);
+  const [svgProviders, setSvgProviders] = useState('');
+  const [svgDarkMode, setSvgDarkMode] = useState('');
+  const [svgBlockSize, setSvgBlockSize] = useState('');
+  const [svgBlockRadius, setSvgBlockRadius] = useState('');
+  const [svgBlockMargin, setSvgBlockMargin] = useState('');
+  const [svgFontSize, setSvgFontSize] = useState('');
+  const [svgMaxLevel, setSvgMaxLevel] = useState('');
+  const [svgWeekStart, setSvgWeekStart] = useState('');
+  const [svgHideColorLegend, setSvgHideColorLegend] = useState('');
+  const [svgHideMonthLabels, setSvgHideMonthLabels] = useState('');
+  const [svgHideTotalCount, setSvgHideTotalCount] = useState('');
+  const [svgHideWeekdayLabels, setSvgHideWeekdayLabels] = useState('');
   const [svgWeekdayLabels, setSvgWeekdayLabels] = useState('');
   const [svgShowLoadingAnimation, setSvgShowLoadingAnimation] = useState(true);
   const [svgData, setSvgData] = useState<string | null>(null);
@@ -44,30 +64,21 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
     const params = new URLSearchParams({
       userId: svgUserId,
       year: svgYear,
-      darkMode: svgDarkMode.toString(),
-      blockSize: svgBlockSize,
-      blockRadius: svgBlockRadius,
-      blockMargin: svgBlockMargin,
-      fontSize: svgFontSize,
-      maxLevel: svgMaxLevel,
-      weekStart: svgWeekStart,
-      hideColorLegend: svgHideColorLegend.toString(),
-      hideMonthLabels: svgHideMonthLabels.toString(),
-      hideTotalCount: svgHideTotalCount.toString(),
-      hideWeekdayLabels: svgHideWeekdayLabels.toString(),
-      showLoadingAnimation: svgShowLoadingAnimation.toString()
+      ...((svgProviders !== '') && { providers: svgProviders }),
+      ...((svgDarkMode !== '') && { darkMode: (svgDarkMode).toString() }),
+      ...((svgBlockSize !== '') && { blockSize: svgBlockSize }),
+      ...((svgBlockRadius !== '') && { blockRadius: svgBlockRadius }),
+      ...((svgBlockMargin !== '') && { blockMargin: svgBlockMargin }),
+      ...((svgFontSize !== '') && { fontSize: svgFontSize }),
+      ...((svgMaxLevel !== '') && { maxLevel: svgMaxLevel }),
+      ...((svgWeekStart !== '') && { weekStart: svgWeekStart }),
+      ...((svgWeekdayLabels !== '') && { weekdayLabels: svgWeekdayLabels }),
+      ...((svgHideColorLegend !== '') && { hideColorLegend: (svgHideColorLegend).toString() }),
+      ...((svgHideMonthLabels !== '') && { hideMonthLabels: (svgHideMonthLabels).toString() }),
+      ...((svgHideTotalCount !== '') && { hideTotalCount: (svgHideTotalCount).toString() }),
+      ...((svgHideWeekdayLabels !== '') && { hideWeekdayLabels: (svgHideWeekdayLabels).toString() }),
+      ...((svgShowLoadingAnimation !== '') && { showLoadingAnimation: (svgShowLoadingAnimation).toString() }),
     });
-
-    if (svgProviders) {
-      svgProviders.split(',').forEach(provider => {
-        if (provider.trim())
-          params.append('providers', provider.trim());
-      });
-    }
-
-    if (svgWeekdayLabels.trim()) {
-      params.append('weekdayLabels', svgWeekdayLabels);
-    }
 
     return `${baseUrl}/contributions/svg?${params.toString()}`;
   };
@@ -100,6 +111,25 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
       setSvgLoading(false);
     }
   };
+
+  const clearData = () => {
+    setSvgData(null);
+    setSvgError(null);
+    setSvgProviders('');
+    setSvgDarkMode('');
+    setSvgBlockSize('');
+    setSvgBlockRadius('');
+    setSvgBlockMargin('');
+    setSvgFontSize('');
+    setSvgMaxLevel('');
+    setSvgWeekStart('');
+    setSvgHideColorLegend('');
+    setSvgHideMonthLabels('');
+    setSvgHideTotalCount('');
+    setSvgHideWeekdayLabels('');
+    setSvgWeekdayLabels('');
+    setSvgShowLoadingAnimation(true);
+  }
 
   return (
     <Card>
@@ -138,12 +168,12 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
               onChange={(e) => setSvgProviders(e.target.value)}
             />
           </div>
-          
+
           {/* Visual Customization */}
           <div className="md:col-span-2">
             <h4 className="font-semibold text-sm mb-3 mt-2">Visual Customization</h4>
           </div>
-          
+
           <div>
             <Label htmlFor="svgBlockSize">Block Size (px)</Label>
             <Input
@@ -217,12 +247,12 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
               onChange={(e) => setSvgWeekdayLabels(e.target.value)}
             />
           </div>
-          
+
           {/* Visibility Controls */}
           <div className="md:col-span-2">
             <h4 className="font-semibold text-sm mb-3 mt-2">Visibility & Options</h4>
           </div>
-          
+
           <div className="md:col-span-2">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="flex items-center space-x-2">
@@ -311,12 +341,9 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
           {svgData && (
             <Button
               variant="outline"
-              onClick={() => {
-                setSvgData(null);
-                setSvgError(null);
-              }}
+              onClick={clearData}
             >
-              Clear SVG
+              Clear Data
             </Button>
           )}
         </div>
@@ -355,18 +382,7 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
             </div>
           )}
 
-          {!svgLoading && svgData && (
-            <div className="space-y-4">
-              <div className="border rounded-lg p-4 bg-muted/20 overflow-x-auto">
-                <div dangerouslySetInnerHTML={{ __html: svgData }} />
-              </div>
-
-              <div className="text-xs text-muted-foreground bg-muted/50 p-3 rounded-md">
-                <p className="font-medium mb-1">Usage:</p>
-                <p>You can embed this SVG directly in HTML, use it in GitHub READMEs, or save it as an image file.</p>
-              </div>
-            </div>
-          )}
+          {!svgLoading && svgData && <SvgPreview svgData={svgData} />}
         </div>
       </CardContent>
     </Card>

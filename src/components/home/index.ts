@@ -1,4 +1,3 @@
-// Home page modular components
 export { default as HeroSection } from './hero-section';
 export { default as APIOverview } from './api-overview';
 export { default as GetEndpointDocs } from './get-endpoint-docs';

@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Header from '@/components/header';
 import { useAuth } from '@/contexts/auth-context';
 
-// Modular home page components
 import {
   HeroSection,
   APIOverview,

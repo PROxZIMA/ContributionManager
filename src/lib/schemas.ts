@@ -57,6 +57,6 @@ export interface MetaInfo {
   scannedProjects: number;
   scannedRepos: number;
   elapsedMs: number;
-  cachedProjects: boolean;
+  cacheHit: boolean;
   errors: string[];
 }

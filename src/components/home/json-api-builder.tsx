@@ -33,8 +33,8 @@ interface JsonApiBuilderProps {
 export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderProps) {
   const [userId, setUserId] = useState(initialUserId);
   const [year, setYear] = useState('2025');
-  const [providers, setProviders] = useState('github,azure');
-  const [includeActivity, setIncludeActivity] = useState(false);
+  const [providers, setProviders] = useState('');
+  const [includeActivity, setIncludeActivity] = useState('');
   const [includeBreakdown, setIncludeBreakdown] = useState(true);
   const [apiData, setApiData] = useState<ContributionsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,16 +50,10 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
     const params = new URLSearchParams({
       userId,
       year,
-      includeActivity: includeActivity.toString(),
-      includeBreakdown: includeBreakdown.toString()
+      ...((providers !== '') && { providers: providers }),
+      ...((includeActivity !== '') && { includeActivity: includeActivity.toString() }),
+      ...((includeBreakdown !== '') && { includeBreakdown: includeBreakdown.toString() }),
     });
-
-    if (providers) {
-      providers.split(',').forEach(provider => {
-        if (provider.trim())
-          params.append('providers', provider.trim());
-      });
-    }
 
     return `${baseUrl}/contributions?${params.toString()}`;
   };
@@ -95,6 +89,14 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
       setIsLoading(false);
     }
   };
+
+  const clearData = () => {
+    setApiData(null);
+    setError(null);
+    setProviders('');
+    setIncludeActivity('');
+    setIncludeBreakdown(true);
+  }
 
   return (
     <Card>
@@ -183,10 +185,7 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
           {apiData && (
             <Button
               variant="outline"
-              onClick={() => {
-                setApiData(null);
-                setError(null);
-              }}
+              onClick={clearData}
             >
               Clear Data
             </Button>
@@ -333,7 +332,7 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
                     </div>
                     <div>
                       <span className="text-muted-foreground">Cached: </span>
-                      <span className="font-mono">{apiData.meta.cachedProjects ? 'Yes' : 'No'}</span>
+                      <span className="font-mono">{apiData.meta.cacheHit ? 'Yes' : 'No'}</span>
                     </div>
                   </div>
                   {apiData.meta.errors && apiData.meta.errors.length > 0 && (

@@ -33,7 +33,7 @@ const sampleResponse: ContributionsResponse = {
     scannedProjects: 15,
     scannedRepos: 8,
     elapsedMs: 1250,
-    cachedProjects: true,
+    cacheHit: true,
     errors: []
   }
 };
@@ -74,10 +74,10 @@ export default function GetEndpointDocs() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2 text-sm">
                 <code>providers</code>
-                <span>string[]</span>
+                <span>string</span>
                 <Badge variant="secondary" className="w-fit h-fit">Optional</Badge>
                 <span>all</span>
-                <span>Platform filters (github, azure)</span>
+                <span>Comma-separated platform filters (e.g., "github,azure")</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_1fr_2fr] gap-2 text-sm">
                 <code>includeActivity</code>
@@ -110,7 +110,7 @@ export default function GetEndpointDocs() {
             <CollapsibleContent className="mt-4">
               <div className="border rounded-lg p-4 bg-muted/20">
                 <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
-                  {`GET /Contributions?userId=abc123&year=2024&providers=github&providers=azure&includeBreakdown=false&includeActivity=false`}
+                  {`GET /Contributions?userId=abc123&year=2024&providers=github,azure&includeBreakdown=false&includeActivity=false`}
                 </pre>
               </div>
             </CollapsibleContent>
