@@ -163,7 +163,7 @@ export default function SvgApiBuilder({ initialUserId = '' }: SvgApiBuilderProps
             <Label htmlFor="svgProviders">Providers (comma-separated)</Label>
             <Input
               id="svgProviders"
-              placeholder="github,azure"
+              placeholder="github,azure,gitlab"
               value={svgProviders}
               onChange={(e) => setSvgProviders(e.target.value)}
             />

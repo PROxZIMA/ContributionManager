@@ -36,7 +36,7 @@ export default function HeroSection() {
             <Users className="h-8 w-8 text-primary mb-2" />
             <CardTitle>Multi-Platform</CardTitle>
             <CardDescription>
-              Supports GitHub, Azure DevOps, and many more platforms coming soon
+              Supports GitHub, Azure DevOps, GitLab, and many more platforms coming soon
             </CardDescription>
           </CardHeader>
         </Card>

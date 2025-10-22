@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc, updateDoc, deleteField } from 'firebase/firestore';
 import { db } from './config';
-import type { AzureFormValues, GitHubFormValues } from '@/lib/schemas';
+import type { AzureFormValues, GitHubFormValues, GitLabFormValues } from '@/lib/schemas';
 import { 
   storeUserTokens, 
   deleteUserToken, 
@@ -17,10 +17,12 @@ import {
 // Types for credentials without PAT tokens (stored in Firestore)
 export type AzureCredentialsData = Omit<AzureFormValues, 'pat'>;
 export type GitHubCredentialsData = Omit<GitHubFormValues, 'pat'>;
+export type GitLabCredentialsData = Omit<GitLabFormValues, 'pat'>;
 
 type TCredentials = {
   azure?: AzureCredentialsData;
   github?: GitHubCredentialsData;
+  gitlab?: GitLabCredentialsData;
 };
 
 // Types for complete credentials including PAT tokens (for client use)

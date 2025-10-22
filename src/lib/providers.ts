@@ -1,14 +1,16 @@
-import { Cloud, Github } from 'lucide-react';
+import { Cloud, Github, GitBranch } from 'lucide-react';
 import { 
   AzureCredentialsSchema, 
   GitHubCredentialsSchema,
+  GitLabCredentialsSchema,
   type AzureFormValues,
-  type GitHubFormValues 
+  type GitHubFormValues,
+  type GitLabFormValues 
 } from '@/lib/schemas';
 import { setProviderCredentials } from '@/lib/firebase/firestore';
 
 // Provider configuration types
-export type ProviderKey = 'azure' | 'github';
+export type ProviderKey = 'azure' | 'github' | 'gitlab';
 
 export interface FieldConfig {
   label: string;
@@ -75,6 +77,27 @@ export const PROVIDERS: Record<ProviderKey, ProviderConfig> = {
     },
     fieldsOrder: ['username', 'pat'],
     saveCredentials: setProviderCredentials
+  },
+  gitlab: {
+    key: 'gitlab',
+    name: 'GitLab',
+    description: 'Manage your credentials for GitLab API.',
+    icon: GitBranch,
+    schema: GitLabCredentialsSchema,
+    fields: {
+      username: {
+        label: 'Username',
+        type: 'text',
+        placeholder: 'Your GitLab username'
+      },
+      pat: {
+        label: 'Personal Access Token (PAT)',
+        type: 'password',
+        placeholder: 'Enter new PAT to update'
+      }
+    },
+    fieldsOrder: ['username', 'pat'],
+    saveCredentials: setProviderCredentials
   }
 };
 
@@ -96,9 +119,10 @@ export const isValidProviderKey = (key: string): key is ProviderKey => {
 };
 
 // Type helpers for credentials
-export type ProviderCredentials = AzureFormValues | GitHubFormValues;
+export type ProviderCredentials = AzureFormValues | GitHubFormValues | GitLabFormValues;
 
 export type ProviderData = {
   azure?: AzureFormValues;
   github?: GitHubFormValues;
+  gitlab?: GitLabFormValues;
 };

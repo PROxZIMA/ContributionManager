@@ -15,6 +15,13 @@ export const GitHubCredentialsSchema = z.object({
     .min(1, { message: 'Personal Access Token (PAT) is required.' }),
 });
 
+export const GitLabCredentialsSchema = z.object({
+  username: z.string().min(1, { message: 'Username is required.' }),
+  pat: z
+    .string()
+    .min(1, { message: 'Personal Access Token (PAT) is required.' }),
+});
+
 export const EmailAuthSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z
@@ -31,12 +38,14 @@ export const EmailSignUpSchema = EmailAuthSchema.extend({
 
 export type AzureFormValues = z.infer<typeof AzureCredentialsSchema>;
 export type GitHubFormValues = z.infer<typeof GitHubCredentialsSchema>;
+export type GitLabFormValues = z.infer<typeof GitLabCredentialsSchema>;
 export type EmailAuthValues = z.infer<typeof EmailAuthSchema>;
 export type EmailSignUpValues = z.infer<typeof EmailSignUpSchema>;
 
 // Types for credentials without PAT tokens (for Firestore storage)
 export type AzureCredentialsDataOnly = Omit<AzureFormValues, 'pat'>;
 export type GitHubCredentialsDataOnly = Omit<GitHubFormValues, 'pat'>;
+export type GitLabCredentialsDataOnly = Omit<GitLabFormValues, 'pat'>;
 
 // API Response Types for Contributions API
 export interface ContributionsResponse {
