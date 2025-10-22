@@ -51,13 +51,31 @@ Contribution Hub Manager is a secure web application that serves as the frontend
 
 ### Built With
 
-* [![Next.js](https://img.shields.io/badge/Next.js-15.3-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
-* [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-* [![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-* [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-* [![Firebase Firestore](https://img.shields.io/badge/Firebase_Firestore-Database-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)](https://firebase.google.com/products/firestore)
-* [![Google Secret Manager](https://img.shields.io/badge/Google_Secret_Manager-Security-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://cloud.google.com/secret-manager)
-* [![Azure Web Apps](https://img.shields.io/badge/Azure_Web_Apps-Hosting-0078D7?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOCAxOCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiIiB4MT0iNC40IiB5MT0iMTEuNDgiIHgyPSI0LjM3IiB5Mj0iNy41MyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJjIiB4MT0iMTAuMTMiIHkxPSIxNS40NSIgeDI9IjEwLjEzIiB5Mj0iMTEuOSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2NjYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIvPjwvbGluZWFyR3JhZGllbnQ+PGxpbmVhckdyYWRpZW50IGlkPSJkIiB4MT0iMTQuMTgiIHkxPSIxMS4xNSIgeDI9IjE0LjE4IiB5Mj0iNy4zOCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2NjYyIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZjZmNmYyIvPjwvbGluZWFyR3JhZGllbnQ+PHJhZGlhbEdyYWRpZW50IGlkPSJhIiBjeD0iMTM0MjguODEiIGN5PSIzNTE4Ljg2IiByPSI1Ni42NyIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCguMTUgMCAwIC4xNSAtMjAwNS4zMyAtNTE4LjgzKSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNC4yMSAxNS43MkE4LjUgOC41IDAgMDEzLjc5IDIuMjhsLjA5LS4wNmE4LjUgOC41IDAgMDExMC4zMyAxMy41IiBmaWxsPSJ1cmwoI2EpIi8+PHBhdGggZD0iTTYuNjkgNy4yM2ExMyAxMyAwIDAxOC45MS0zLjU4IDguNDcgOC40NyAwIDAwLTEuNDktMS40NCAxNC4zNCAxNC4zNCAwIDAwLTQuNjkgMS4xIDEyLjU0IDEyLjU0IDAgMDAtNC4wOCAyLjgyIDIuNzYgMi43NiAwIDAxMS4zNSAxLjF6TTIuNDggMTAuNjVhMTcuODYgMTcuODYgMCAwMC0uODMgMi42MiA3LjgyIDcuODIgMCAwMC42Mi45MmMuMTguMjMuMzUuNDQuNTUuNjVhMTcuOTQgMTcuOTQgMCAwMTEuMDgtMy40NyAyLjc2IDIuNzYgMCAwMS0xLjQyLS43MnoiIGZpbGw9IiNmZmYiIG9wYWNpdHk9Ii42Ii8+PHBhdGggZD0iTTMuNDYgNi4xMWExMiAxMiAwIDAxLS42OS0yLjk0IDguMTUgOC4xNSAwIDAwLTEuMSAxLjQ1QTEyLjY5IDEyLjY5IDAgMDAyLjI0IDdhMi42OSAyLjY5IDAgMDExLjIyLS44OXoiIGZpbGw9IiNmMmYyZjIiIG9wYWNpdHk9Ii41NSIvPjxjaXJjbGUgY3g9IjQuMzgiIGN5PSI4LjY4IiByPSIyLjczIiBmaWxsPSJ1cmwoI2IpIi8+PHBhdGggZD0iTTguMzYgMTMuNjdhMS43NyAxLjc3IDAgMDEuNTQtMS4yNyAxMS44OCAxMS44OCAwIDAxLTIuNTMtMS44NiAyLjc0IDIuNzQgMCAwMS0xLjQ5LjgzIDEzLjEgMTMuMSAwIDAwMS40NSAxLjI4IDEyLjEyIDEyLjEyIDAgMDAyLjA1IDEuMjUgMS43OSAxLjc5IDAgMDEtLjAyLS4yM3pNMTQuNjYgMTMuODhhMTIgMTIgMCAwMS0yLjc2LS4zMi40MS40MSAwIDAxMCAuMTEgMS43NSAxLjc1IDAgMDEtLjUxIDEuMjQgMTMuNjkgMTMuNjkgMCAwMDMuNDIuMjRBOC4yMSA4LjIxIDAgMDAxNiAxMy44MWExMS41IDExLjUgMCAwMS0xLjM0LjA3eiIgZmlsbD0iI2YyZjJmMiIgb3BhY2l0eT0iLjU1Ii8+PGNpcmNsZSBjeD0iMTAuMTMiIGN5PSIxMy42NyIgcj0iMS43OCIgZmlsbD0idXJsKCNjKSIvPjxwYXRoIGQ9Ik0xMi4zMiA4LjkzYTEuODMgMS44MyAwIDAxLjYxLTEgMjUuNSAyNS41IDAgMDEtNC40Ni00LjE0IDE2LjkxIDE2LjkxIDAgMDEtMi0yLjkyIDcuNjQgNy42NCAwIDAwLTEuMDkuNDIgMTguMTQgMTguMTQgMCAwMDIuMTUgMy4xOCAyNi40NCAyNi40NCAwIDAwNC43OSA0LjQ2eiIgZmlsbD0iI2YyZjJmMiIgb3BhY2l0eT0iLjciLz48Y2lyY2xlIGN4PSIxNC4xOCIgY3k9IjkuMjciIHI9IjEuODkiIGZpbGw9InVybCgjZCkiLz48cGF0aCBkPSJNMTcuMzUgMTAuNTRsLS4zNS0uMTctLjMtLjE2aC0uMDZsLS4yNi0uMjFoLS4wN0wxNiA5LjhhMS43NiAxLjc2IDAgMDEtLjY0LjkyYy4xMi4wOC4yNS4xNS4zOC4yMmwuMDguMDUuMzUuMTkuODYuNDVhOC42MyA4LjYzIDAgMDAuMjktMS4xMXoiIGZpbGw9IiNmMmYyZjIiIG9wYWNpdHk9Ii41NSIvPjxjaXJjbGUgY3g9IjQuMzgiIGN5PSI4LjY4IiByPSIyLjczIiBmaWxsPSJ1cmwoI2IpIi8+PGNpcmNsZSBjeD0iMTAuMTMiIGN5PSIxMy42NyIgcj0iMS43OCIgZmlsbD0idXJsKCNjKSIvPjwvc3ZnPg==&logoColor=white)](https://azure.microsoft.com/en-us/products/app-service/web)
+* [![Next.js][nextjs-badge]][nextjs-url]
+* [![React][react-badge]][react-url]
+* [![TypeScript][typescript-badge]][typescript-url]
+* [![Tailwind CSS][tailwind-badge]][tailwind-url]
+* [![Firebase Firestore][firestore-badge]][firestore-url]
+* [![Google Secret Manager][secretmanager-badge]][secretmanager-url]
+* [![Oracle OCI][oracle-oci-badge]][oracle-oci-url]
+* [![Docker][docker-badge]][docker-url]
+
+[nextjs-badge]: https://img.shields.io/badge/Next.js-15.3-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[nextjs-url]: https://nextjs.org/
+[react-url]: https://reactjs.org/
+[react-badge]: https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black
+[typescript-badge]: https://img.shields.io/badge/TypeScript-blue?style=for-the-badge&logo=typescript&logoColor=white
+[typescript-url]: https://www.typescriptlang.org/
+[tailwind-badge]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[tailwind-url]: https://tailwindcss.com/
+[firestore-badge]: https://img.shields.io/badge/Firebase_Firestore-Database-FFCA28?style=for-the-badge&logo=firebase&logoColor=white
+[firestore-url]: https://firebase.google.com/products/firestore
+[secretmanager-badge]: https://img.shields.io/badge/Google_Secret_Manager-Security-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white
+[secretmanager-url]: https://cloud.google.com/secret-manager
+[oracle-oci-badge]: https://img.shields.io/badge/Oracle_OCI-Hosting-C74634?style=for-the-badge&logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMCIgaWQ9ImthdG1hbl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMxNy4yIDIwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBhdGggY2xhc3M9InN0MCIgZD0ibTEwMCAyMDBjLTU1LjYgMC0xMDAtNDQuNC0xMDAtMTAwczQ0LjQtMTAwIDEwMC0xMDBoMTE3LjJjNTUuNiAwIDEwMCA0NC40IDEwMCAxMDBzLTQ0LjQgMTAwLTEwMCAxMDBoLTExNy4yem0xMTQuMi0zNS40YzM2LjQgMCA2NC42LTI5LjMgNjQuNi02NC42IDAtMzYuNC0yOS4zLTY0LjYtNjQuNi02NC42aC0xMTEuMmMtMzYuNCAwLTY0LjYgMjkuMy02NC42IDY0LjZzMjkuMyA2NC42IDY0LjYgNjQuNmgxMTEuMnoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=&logoColor=white
+[oracle-oci-url]: https://www.oracle.com/in/cloud/
+[docker-badge]: https://img.shields.io/badge/Docker-Containerization-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[docker-url]: https://www.docker.com/
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -274,7 +292,7 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
+<img src="./.github/catppuccin_cat_on_line.svg" width="100%" title="Footer">
 
 <div align="center">
   <p>Built with ❤️ by <a href="https://github.com/PROxZIMA">PROxZIMA</a></p>
