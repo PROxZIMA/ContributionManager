@@ -130,7 +130,7 @@ export default function JsonApiBuilder({ initialUserId = '' }: JsonApiBuilderPro
             <Label htmlFor="providers">Providers (comma-separated)</Label>
             <Input
               id="providers"
-              placeholder="github,azure"
+              placeholder="github,azure,gitlab"
               value={providers}
               onChange={(e) => setProviders(e.target.value)}
             />

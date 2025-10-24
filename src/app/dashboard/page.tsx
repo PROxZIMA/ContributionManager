@@ -6,7 +6,7 @@ export default function DashboardPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
-          Manage your API credentials for Azure DevOps and GitHub.
+          Manage your API credentials for various version control platforms.
         </p>
       </div>
       <DashboardClient />

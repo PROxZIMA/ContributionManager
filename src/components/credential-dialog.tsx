@@ -92,6 +92,23 @@ function PATHelp({ providerKey }: PATHelpProps) {
         '/setup/azure/az-pat-location.png',
         '/setup/azure/az-token-creation.png'
       ]
+    },
+    gitlab: {
+      title: 'GitLab Personal Access Token',
+      steps: [
+        {
+          step: 1,
+          text: 'Go to GitLab Settings → Access Tokens',
+          url: 'https://gitlab.com/-/user_settings/personal_access_tokens?name=Credential%20Manager%20Token&description=Credential%20Manager%20Token&scopes=read_user'
+        },
+        {
+          step: 2,
+          text: 'Create new token with these minimal scopes:',
+          items: [
+            'read_user (Read user profile)'
+          ]
+        }
+      ]
     }
   };
 
