@@ -15,7 +15,7 @@ Brief description of the changes.
 - [ ] Refactoring
 
 ## Related Issue(s)
-Fixes #(issue) or Closes #(issue)
+Closes #(issue)
 
 ## Changes Made
 - 
